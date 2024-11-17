@@ -100,8 +100,10 @@ Start simple, test thoroughly, and gradually add complexity. Good luck!
 
 ## Notes
 
-# Notes
-
 Here are the notes available in this repository:
 
 - [About Pipes](./notes/Pipes.md)
+- [About Fork](./notes/Exec.md)
+- [About Exec](./notes/Fork.md)
+- [About Wait and Dup](./notes/Fork.md)
+- [Signals in c](./notes/Signal.md)
