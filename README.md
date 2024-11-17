@@ -96,3 +96,12 @@ Remember: A shell is a tool that helps users interact with the operating system.
 ---
 
 Start simple, test thoroughly, and gradually add complexity. Good luck!
+
+
+## Notes
+
+# Notes
+
+Here are the notes available in this repository:
+
+- [About Pipes](./notes/Pipes.md)
