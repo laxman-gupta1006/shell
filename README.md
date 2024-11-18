@@ -107,3 +107,4 @@ Here are the notes available in this repository:
 - [About Exec](./notes/Fork.md)
 - [About Wait and Dup](./notes/Fork.md)
 - [Signals in c](./notes/Signal.md)
+- [Makefile](./notes/Makefile.md)
