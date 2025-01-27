@@ -1,3 +1,10 @@
 {
-    "workbench.editorAssociations": {}
+    "workbench.editorAssociations": {},
+    "files.associations": {
+        "*.sqlbook": "sql",
+        "*.ndjson": "jsonl",
+        "*.dbclient-js": "javascript",
+        "fcntl.h": "c",
+        "stat.h": "c"
+    }
 }
