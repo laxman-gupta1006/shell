@@ -1,110 +1,183 @@
-# Build Your Own Shell - Hint Guide
+# MyShell - Custom Unix Shell Implementation
 
-This guide provides hints for implementing a basic Unix shell from scratch. Each section contains guiding questions and tips without direct solutions, encouraging you to think through the implementation.
+A basic Unix shell implementation written in C that supports core shell functionality including command execution, built-in commands, and I/O redirection.
 
-## Prerequisites
-- What C system calls might you need for process management?
-- Which header files typically contain these syscalls?
-- How comfortable are you with string manipulation in C?
+## Features Implemented
 
-## Core Components to Consider
+### Core Shell Functionality
+- **Interactive Command Prompt**: Displays current working directory in the format `@LaxmanGupta(Myshell):<current_directory> >>`
+- **Command Line Parsing**: Handles whitespace, arguments, and quoted strings
+- **Process Creation**: Uses `fork()` and `execvp()` for command execution
+- **Process Management**: Proper parent-child process handling with `wait()`
 
-### 1. Command Line Parsing
-- How will you handle whitespace between arguments?
-- What's a good data structure to store command arguments?
-- Should you handle quotes? How might they affect parsing?
-- Consider: What happens when a user presses the up arrow in bash?
+### Built-in Commands
+- **`cd <directory>`**: Change current working directory
+  - Handles directory change errors with appropriate error messages
+- **`exit`**: Gracefully exits the shell with a goodbye message
+- **`jobs`**: List all active background processes
 
-### 2. Process Creation
-- Which syscall creates new processes?
-- How does a child process differ from its parent?
-- What happens to file descriptors during forking?
-- Think about: How does the shell know when a child process ends?
+### Input/Output Redirection
+- **Input Redirection (`<`)**: Redirect stdin from a file
+  - Example: `cat < input.txt`
+- **Output Redirection (`>`)**: Redirect stdout to a file (overwrites)
+  - Example: `ls > output.txt`
+- Proper file descriptor management and error handling
 
-### 3. Built-in Commands
-- Why implement some commands as built-ins?
-- Minimum built-ins to consider:
-  - `cd`: Why can't this be an external program?
-  - `exit`: What state needs cleaning before exit?
-  - `help`: What information should users see?
+### Pipe Support
+- **Command Pipelines (`|`)**: Chain multiple commands together
+  - Example: `ls -la | grep .txt | wc -l`
+- **Multi-stage Pipelines**: Support for multiple pipes in a single command
+  - Example: `cat file.txt | grep pattern | sort | uniq`
+- Proper inter-process communication using Unix pipes
 
-### 4. Path Resolution
-- Where does the shell look for executables?
-- How to handle relative vs absolute paths?
-- What environment variable is crucial here?
+### Background Process Support
+- **Background Execution (`&`)**: Run commands in the background
+  - Example: `sleep 10 &`
+- **Job Control**: Track and manage background processes
+- **Job Listing**: Use `jobs` command to see active background processes
+- Automatic notification when background jobs complete
 
-### 5. Signal Handling
-- What happens when user presses Ctrl+C?
-- Should it affect the shell, the running program, or both?
-- How to handle background processes?
+### Signal Handling
+- **Ctrl+C (SIGINT)**: Interrupt foreground processes without killing the shell
+- **Ctrl+Z (SIGTSTP)**: Suspend foreground processes
+- **Child Process Management**: Automatic cleanup of zombie processes
+- Background processes ignore interrupt signals
 
-### 6. Input/Output Redirection
-- What do `<`, `>`, and `>>` do in a shell?
-- Which file descriptors are involved?
-- When should redirection happen - parent or child process?
+### Command Parsing Features
+- **Quote Handling**: Supports quoted arguments with spaces
+- **File Redirection Parsing**: Automatically detects and handles `<` and `>`
+- **Argument Tokenization**: Splits commands into proper argument arrays
 
-### 7. Pipes
-- How does `ls | grep foo` work internally?
-- What connects the output of one process to input of another?
-- Think about: How many processes are created for `a | b | c`?
+### Error Handling
+- Fork failure detection
+- File opening errors for redirection
+- Directory change errors
+- Command execution failures
+- Input validation and edge case handling
 
-### 8. Error Handling
-- What should happen if a command isn't found?
-- How to handle fork/exec failures?
-- Should errors go to stderr or stdout?
+## Technical Implementation
 
-## Advanced Features to Consider
+### System Calls Used
+- `fork()` - Process creation
+- `execvp()` - Program execution
+- `wait()` / `waitpid()` - Process synchronization
+- `chdir()` - Directory changes
+- `open()`, `close()` - File operations
+- `getcwd()` - Current directory retrieval
+- `pipe()` - Inter-process communication
+- `dup2()` - File descriptor duplication
+- `signal()` - Signal handling
+- `kill()` - Send signals to processes
 
-### Environment Variables
-- How does the shell store and access environment variables?
-- What happens when you type `$PATH`?
-- Think about: How is `export` different from regular assignment?
+### Memory Management
+- Dynamic memory allocation with `strdup()`
+- Proper string handling and null termination
+- Buffer overflow protection
 
-### Job Control
-- What makes `&` work for background processes?
-- How might you implement `fg` and `bg`?
-- Consider: How does shell keep track of stopped jobs?
+## Build Instructions
 
-## Testing Strategy
-- How will you test interactive features?
-- What edge cases should you consider?
-- Think about: How to handle malformed input?
+### Compile the Shell
+```bash
+make shell
+```
 
-## Common Pitfalls
-- Memory leaks in long-running programs
-- Zombie processes
-- Race conditions with signals
-- Buffer overflows in input handling
+### Compile Optimized Version
+```bash
+make shell_optimized
+```
 
-## Resources to Explore
-- POSIX standard documentation
-- Man pages: `exec`, `fork`, `wait`, `pipe`, `dup2`
-- Source code of existing shells
+### Run the Shell
+```bash
+make run
+```
 
-## Suggested Implementation Order
-1. Basic command execution
-2. Command line parsing
-3. Built-in commands
-4. Path resolution
-5. Signal handling
-6. Redirection
-7. Pipes
-8. Job control
+## Usage Examples
 
-Remember: A shell is a tool that helps users interact with the operating system. Each feature you add should make this interaction more efficient or powerful.
+### Basic Commands
+```bash
+@LaxmanGupta(Myshell):/home/user >> ls
+@LaxmanGupta(Myshell):/home/user >> pwd
+@LaxmanGupta(Myshell):/home/user >> date
+```
+
+### Built-in Commands
+```bash
+@LaxmanGupta(Myshell):/home/user >> cd Documents
+@LaxmanGupta(Myshell):/home/user/Documents >> jobs
+@LaxmanGupta(Myshell):/home/user/Documents >> exit
+```
+
+### I/O Redirection
+```bash
+@LaxmanGupta(Myshell):/home/user >> ls > filelist.txt
+@LaxmanGupta(Myshell):/home/user >> cat < input.txt
+@LaxmanGupta(Myshell):/home/user >> grep "pattern" < data.txt > results.txt
+```
+
+### Pipes
+```bash
+@LaxmanGupta(Myshell):/home/user >> ls -la | grep .txt
+@LaxmanGupta(Myshell):/home/user >> cat file.txt | grep pattern | sort | uniq
+@LaxmanGupta(Myshell):/home/user >> ps aux | grep shell
+```
+
+### Background Processes
+```bash
+@LaxmanGupta(Myshell):/home/user >> sleep 10 &
+[1] 12345
+@LaxmanGupta(Myshell):/home/user >> jobs
+Active background jobs:
+[1] 12345    sleep 10 &
+@LaxmanGupta(Myshell):/home/user >> 
+[1] Done    sleep 10 &
+```
+
+### Quoted Arguments
+```bash
+@LaxmanGupta(Myshell):/home/user >> echo "Hello World"
+@LaxmanGupta(Myshell):/home/user >> mkdir "My Documents"
+```
+
+## Project Structure
+```
+shell/
+├── src/
+│   └── shell.c          # Main shell implementation
+├── bin/                 # Compiled binaries (created after build)
+├── notes/              # Documentation and implementation notes
+│   ├── Pipes.md
+│   ├── Fork.md
+│   ├── Exec.md
+│   ├── Wait_Dup.md
+│   ├── Signal.md
+│   └── Makefile.md
+├── Makefile            # Build configuration
+└── README.md           # This file
+```
+
+## Current Limitations
+
+### Not Yet Implemented
+- Environment variable expansion (`$VAR`)
+- Command history
+- Tab completion
+- Append redirection (`>>`)
+- Advanced job control (`fg`, `bg` commands)
+
+## Notes and Documentation
+
+This repository includes detailed implementation notes:
+
+- [About Pipes](./notes/Pipes.md)
+- [About Fork](./notes/Fork.md)
+- [About Exec](./notes/Exec.md)
+- [About Wait and Dup](./notes/Wait_Dup.md)
+- [Signals in C](./notes/Signal.md)
+- [Makefile Guide](./notes/Makefile.md)
+
+## Author
+Laxman Gupta
 
 ---
 
-Start simple, test thoroughly, and gradually add complexity. Good luck!
-
-
-## Notes
-
-Here are the notes available in this repository:
-
-- [About Pipes](./notes/Pipes.md)
-- [About Fork](./notes/Exec.md)
-- [About Exec](./notes/Fork.md)
-- [About Wait and Dup](./notes/Fork.md)
-- [Signals in c](./notes/Signal.md)
-- [Makefile](./notes/Makefile.md)
+This shell demonstrates fundamental Unix system programming concepts including process management, file I/O, and system call usage in C.

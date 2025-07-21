@@ -1,11 +1,12 @@
 shell:
-	g++ ./src/shell.c -o ./bin/shell
+	gcc ./src/shell.c -o ./bin/shell
 
 shell_optimized:
-	g++ ./src/shell.c -o3 -o ./bin/shelloptimized
+	gcc ./src/shell.c -O3 -o ./bin/shelloptimized
 
 run:
-	./bin/myshell
+	./bin/shell
 
 run_optimized:
+	./bin/shelloptimized
 	./bin/shelloptimized
